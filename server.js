@@ -2,7 +2,9 @@ import {fileURLToPath} from "url";
 import path from "path";
 import dotenv from "dotenv";
 import express from "express";
-import session from "express-session";
+import expressSession from "express-session";
+import { PrismaSessionStore } from "@quixo3/prisma-session-store";
+import { Prisma, PrismaClient } from "@prisma/client";
 import passport from "passport";
 
 const app = express();
@@ -23,7 +25,25 @@ app.use(express.json());
 app.use('/css', express.static(path.join(__dirname, '/node_modules/bootstrap/dist/css')));
 app.use('/js', express.static(path.join(__dirname, '/node_modules/bootstrap/dist/js')));
 
-// session config (passport)
+// session config 
+app.use(
+    expressSession({
+        cookie: {
+            maxAge: 7 * 24 * 60 * 60 * 1000 // ms
+        },
+        secret: process.env.SECRET,
+        resave: true,
+        saveUninitialized: true,
+        store: new PrismaSessionStore(
+            new PrismaClient(),
+            {
+                checkPeriod: 2 * 60 * 1000, // in ms, expired sessions are automatically removed
+                dbRecordIdIsSessionId: true, // session ID = prisma record ID
+                dbRecordIdFunction: undefined, // function to generate prisma record ID for a given session ID
+            }
+        )
+    })
+)
 /*
 app.use(session({
     secret: process.env.SECRET,
@@ -33,6 +53,8 @@ app.use(session({
         maxAge: 1000 * 60 * 60 * 24
     }
 }));
+
+
 app.use(passport.initialize());
 app.use(passport.session());
 */
