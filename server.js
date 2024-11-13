@@ -5,7 +5,11 @@ import express from "express";
 import expressSession from "express-session";
 import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 import { Prisma, PrismaClient } from "@prisma/client";
+import expressEjsLayouts from "express-ejs-layouts";
 import passport from "passport";
+import homeRouter from "./routes/homeRouter.js";
+import signUpRouter from "./routes/signUpRouter.js";
+import logInRouter from "./routes/logInRouter.js";
 
 const app = express();
 dotenv.config();
@@ -20,6 +24,10 @@ app.set("view engine", "ejs");
 // body-parsing middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// ejs layouts
+app.use(expressEjsLayouts);
+app.set("layout", "layout"); // default layout file
 
 // bootstrap
 app.use('/css', express.static(path.join(__dirname, '/node_modules/bootstrap/dist/css')));
@@ -64,6 +72,9 @@ app.use(passport.session());
 //app.use(loggs);
 
 // routes
+app.use("/", homeRouter);
+app.use("/sign-up", signUpRouter);
+app.use("/log-in", logInRouter);
 
 // error handler
 //app.use(errorHandler);
