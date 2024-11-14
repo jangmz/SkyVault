@@ -1,15 +1,41 @@
 import db from "../prisma/queries.js";
+import { matchedData, validationResult } from "express-validator";
+import bcrypt from "bcryptjs";
 
+// GET /sign-up -> sign up form
 function signUpGet(req, res, next) {
     res.render("sign-up", {
         title: "Sign Up"
     })
 }
 
+// POST /sign-up -> validate input and enter into database
 async function signUpPost(req, res, next) {
-    // TODO: sanitization & validation of user data
-    const user = req.body;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        let details = "";
+        errors.array().map(error => {
+            details = details + error.msg + " ";
+        })
 
+        const error = new Error();
+        error.status = 400;
+        error.details = details;
+
+        return next(error); // error handling middleware
+    }
+
+    const user = matchedData(req); // save form data
+
+    // encrypt password
+    try {
+        const saltRounds = 10;
+        data.password = await bcrypt.hash(data.password1, saltRounds);
+    } catch (error) {
+        return next(error);
+    }
+
+    // insert data into database
     await db.createUser(user);
 
     res.render("log-in", {
