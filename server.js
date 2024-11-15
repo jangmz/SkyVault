@@ -10,7 +10,9 @@ import passport from "passport";
 import homeRouter from "./routes/homeRouter.js";
 import signUpRouter from "./routes/signUpRouter.js";
 import logInRouter from "./routes/logInRouter.js";
+import logOutRouter from "./routes/logOutRouter.js";
 import { errorHandler } from "./middleware/error.js";
+import skyVaultRouter from "./routes/skyVaultRouter.js";
 
 const app = express();
 dotenv.config();
@@ -63,12 +65,10 @@ app.use(session({
     }
 }));
 
-
+*/
+// middleware
 app.use(passport.initialize());
 app.use(passport.session());
-*/
-
-// middleware
 app.use(errorHandler);
 //app.use(setLocalsUser);
 //app.use(loggs);
@@ -77,6 +77,8 @@ app.use(errorHandler);
 app.use("/", homeRouter);
 app.use("/sign-up", signUpRouter);
 app.use("/log-in", logInRouter);
+app.use("/log-out", logOutRouter);
+app.use("/sky-vault", skyVaultRouter);
 
 // app running
 app.listen(PORT, () => console.log(`App is running on port ${PORT}`));
