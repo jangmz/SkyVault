@@ -12,6 +12,9 @@ function signUpGet(req, res, next) {
 // POST /sign-up -> validate input and enter into database
 async function signUpPost(req, res, next) {
     const errors = validationResult(req);
+    /*
+        TODO: this error validation handling is not working properly
+    */
     if (!errors.isEmpty()) {
         let details = "";
         errors.array().map(error => {
@@ -30,7 +33,7 @@ async function signUpPost(req, res, next) {
     // encrypt password
     try {
         const saltRounds = 10;
-        data.password = await bcrypt.hash(data.password1, saltRounds);
+        user.password = await bcrypt.hash(user.password1, saltRounds);
     } catch (error) {
         return next(error);
     }
