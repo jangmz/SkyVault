@@ -19,6 +19,26 @@ async function createUser(user) {
     }
 }
 
+async function findUserByUsername(username) {
+    const user = await prisma.user.findMany({
+        where: {
+            username: username,
+        }
+    });
+
+    return user;
+} 
+
+async function findUserById(userID) {
+    const user = await prisma.user.findUnique({
+        where: {
+            id: userID
+        }
+    });
+
+    return user;
+}
+
 // returns true/false if a user exists 
 async function usernameExists(username) {
     const user = await prisma.user.findMany({
@@ -45,6 +65,8 @@ async function emailExists(email) {
 
 export default {
     createUser,
+    findUserByUsername,
+    findUserById,
     usernameExists,
     emailExists,
 }
