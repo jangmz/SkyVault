@@ -10,6 +10,7 @@ import passport from "passport";
 import homeRouter from "./routes/homeRouter.js";
 import signUpRouter from "./routes/signUpRouter.js";
 import logInRouter from "./routes/logInRouter.js";
+import { errorHandler } from "./middleware/error.js";
 
 const app = express();
 dotenv.config();
@@ -68,6 +69,7 @@ app.use(passport.session());
 */
 
 // middleware
+app.use(errorHandler);
 //app.use(setLocalsUser);
 //app.use(loggs);
 
@@ -75,9 +77,6 @@ app.use(passport.session());
 app.use("/", homeRouter);
 app.use("/sign-up", signUpRouter);
 app.use("/log-in", logInRouter);
-
-// error handler
-//app.use(errorHandler);
 
 // app running
 app.listen(PORT, () => console.log(`App is running on port ${PORT}`));
