@@ -70,7 +70,6 @@ app.use(session({
 // middleware
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(errorHandler);
 app.use(setLocalsUser);
 //app.use(loggs);
 
@@ -80,6 +79,9 @@ app.use("/sign-up", signUpRouter);
 app.use("/log-in", logInRouter);
 app.use("/log-out", logOutRouter);
 app.use("/sky-vault", skyVaultRouter);
+
+// error handling
+app.use(errorHandler);
 
 // app running
 app.listen(PORT, () => console.log(`App is running on port ${PORT}`));

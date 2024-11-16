@@ -1,10 +1,10 @@
 export function isAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         next();
-        console.log("Authentication successfull");
+        //console.log("Authentication successfull");
     }
     else {
-        console.log("Authentication unsuccessfull");
+        //console.log("Authentication unsuccessfull");
         const error = new Error();
         error.status = 401;
         error.message = "Unauthorized";
@@ -17,7 +17,6 @@ export function isAuthenticated(req, res, next) {
 // sets the user to be accessed in ejs files
 // in server.js -> app.use(setLocalsUser)
 export function setLocalsUser(req, res, next) {
-    console.log("Setting user to locals: " + req.user.username);
     if (req.isAuthenticated()) {
         res.locals.user = req.user;
     }
