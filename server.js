@@ -13,6 +13,7 @@ import logInRouter from "./routes/logInRouter.js";
 import logOutRouter from "./routes/logOutRouter.js";
 import { errorHandler } from "./middleware/error.js";
 import skyVaultRouter from "./routes/skyVaultRouter.js";
+import { setLocalsUser } from "./middleware/authCheck.js";
 
 const app = express();
 dotenv.config();
@@ -70,7 +71,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(errorHandler);
-//app.use(setLocalsUser);
+app.use(setLocalsUser);
 //app.use(loggs);
 
 // routes
