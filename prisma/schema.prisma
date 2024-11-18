@@ -26,3 +26,12 @@ model User {
   password  String
   email     String? @unique
 }
+
+model File {
+  id        Int     @id @default(autoincrement())
+  name      String
+  type      String
+  size      Int
+  created   DateTime
+  path      String
+}
