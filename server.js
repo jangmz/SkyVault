@@ -14,14 +14,15 @@ import logOutRouter from "./routes/logOutRouter.js";
 import { errorHandler } from "./middleware/error.js";
 import skyVaultRouter from "./routes/skyVaultRouter.js";
 import { setLocalsUser } from "./middleware/authCheck.js";
+import uploadRouter from "./routes/uploadRouter.js";
 
 const app = express();
 dotenv.config();
 const PORT = process.env.PORT || 5000;
 
 // setting public files and EJS
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __filename = fileURLToPath(import.meta.url); // current file
+const __dirname = path.dirname(__filename); // current directory
 app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 
@@ -56,17 +57,7 @@ app.use(
         )
     })
 )
-/*
-app.use(session({
-    secret: process.env.SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        maxAge: 1000 * 60 * 60 * 24
-    }
-}));
 
-*/
 // middleware
 app.use(passport.initialize());
 app.use(passport.session());
@@ -79,6 +70,7 @@ app.use("/sign-up", signUpRouter);
 app.use("/log-in", logInRouter);
 app.use("/log-out", logOutRouter);
 app.use("/sky-vault", skyVaultRouter);
+app.use("/upload", uploadRouter);
 
 // error handling
 app.use(errorHandler);
