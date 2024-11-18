@@ -63,10 +63,40 @@ async function emailExists(email) {
     else return false;
 }
 
+// insert new uploaded file data
+async function insertFile(fileData) {
+    try {
+        const file = await prisma.file.create({
+            data: {
+                name: fileData.originalname,
+                type: fileData.mimetype,
+                size: fileData.size,
+                created: fileData.created,
+                path: fileData.path,
+                userID: fileData.userID
+            }
+        })
+
+        console.log("File uploaded to DB");
+        console.log(file);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+// returns all files that have been uploaded
+async function getAllFiles() {
+    const allFiles = await prisma.file.findMany();
+
+    return allFiles;
+}
+
 export default {
     createUser,
     findUserByUsername,
     findUserById,
     usernameExists,
     emailExists,
+    insertFile,
+    getAllFiles,
 }
