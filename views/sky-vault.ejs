@@ -1,3 +1,23 @@
 <div class="container">
     <p>Hello, <%= user.username %></p>
+    <table>
+        <thead>
+            <tr>
+                <td>Name</td>
+                <td>Size</td>
+                <td>Created</td>
+            </tr>
+        </thead>
+        <tbody>
+            <% fileList.map(file => { %>
+                <tr>
+                    <td><%= file.name %></td>
+                    <td><%= file.size %> KB</td>
+                    <td><%= file.created %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+        
+    </table>
+    
 </div>
