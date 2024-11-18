@@ -1,6 +1,13 @@
-function skyVaultGet(req, res, next) {
+import db from "../prisma/queries.js";
+
+async function skyVaultGet(req, res, next) {
+    // get all uploaded files
+    const allFiles = await db.getAllFiles();
+    
+    // render page
     res.render("sky-vault", {
-        title: "My files"
+        title: "My files",
+        fileList: allFiles,
     })
 }
 
