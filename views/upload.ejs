@@ -1,7 +1,14 @@
-<form action="/upload" method="post" enctype="multipart/form-data">
-    <div class="form-group">
-        <label for="file" class="form-label">File</label>
-        <input type="file" name="file" id="file" class="form-control">
-        <button type="submit" class="btn btn-primary">Upload</button>
+<div class="container-fluid mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <form action="/upload" method="post" enctype="multipart/form-data" class="border radius p-4">
+                <div class="form-group">
+                    <label for="file" class="form-label">File</label>
+                    <input type="file" name="file" id="file" class="form-control">
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 mt-3">Upload</button>
+            </form>
+        </div>
     </div>
-</form>
+</div>
