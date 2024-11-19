@@ -1,20 +1,23 @@
-<p>Hello, <%= user.username %></p>
-<% if(fileList.length !== 0) { %>
+<% if(filesByFolder) { %>
     <table class="table">
         <thead>
             <tr>
                 <th scope="col">Name</th>
                 <th scope="col">Size</th>
                 <th scope="col">Created</th>
+                <th scope="col">Folder</th>
             </tr>
         </thead>
         <tbody>
-            <% fileList.map(file => { %>
-                <tr>
-                    <td><%= file.name %></td>
-                    <td><%= file.size %> KB</td>
-                    <td><%= file.created %></td>
-                </tr>
+            <% Object.keys(filesByFolder).forEach(folderName => { %>
+                <% filesByFolder[folderName].forEach(file => { %>
+                    <tr>
+                        <td><%= file.name %></td>
+                        <td><%= file.size %> B</td>
+                        <td><%= file.created %></td>
+                        <td><%= folderName %></td>
+                    </tr>
+                <% }) %>
             <% }) %>
         </tbody>
         
