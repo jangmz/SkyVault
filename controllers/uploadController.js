@@ -24,9 +24,13 @@ const upload = multer({
 })
 
 // GET /upload -> upload form
-function uploadGet(req, res, next) {
+async function uploadGet(req, res, next) {
+    // get user folders to be displayed in the form
+    const userFolders = await db.getFoldersByUserID(req.user.id);
+
     res.render("upload", {
-        title: "File upload"
+        title: "File upload",
+        folders: userFolders
     });
 }
 
@@ -39,12 +43,14 @@ async function uploadPost(req, res, next) {
             details: "No file uploaded."
         });
         next(error);
-    }
+    } 
 
     // uploading a file
     const fileData = req.file;
     fileData.created = new Date().toLocaleDateString(); // format: DD/MM/YYYY
     fileData.userID = req.user.id;
+    // set "null" if there are no folders or if "No Folder" is selected"
+    fileData.folderID = req.body.folder === undefined || null ? null : parseInt(req.body.folder);
 
     await db.insertFile(fileData);
 
