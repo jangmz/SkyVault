@@ -18,12 +18,15 @@ async function skyVaultGet(req, res, next) {
         return acc;
     }, {});
 
-    console.log(filesByFolder);
+    if (filesByFolder) {
+        console.log(filesByFolder);
+    }
+    
     
     // render page
     res.render("sky-vault", {
         title: "My files",
-        fileList: userFiles,
+        filesByFolder: filesByFolder,
     })
 }
 
