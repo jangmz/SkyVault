@@ -19,6 +19,7 @@ async function createUser(user) {
     }
 }
 
+// find user by username
 async function findUserByUsername(username) {
     const user = await prisma.user.findMany({
         where: {
@@ -29,6 +30,7 @@ async function findUserByUsername(username) {
     return user;
 } 
 
+// find user by id
 async function findUserById(userID) {
     const user = await prisma.user.findUnique({
         where: {
@@ -91,6 +93,17 @@ async function getAllFiles() {
     return allFiles;
 }
 
+// returns all users files by users ID
+async function getAllFilesByUserID(userID) {
+    const userFiles = await prisma.file.findMany({
+        where: {
+            userID: userID
+        }
+    });
+
+    return userFiles;
+}
+
 export default {
     createUser,
     findUserByUsername,
@@ -99,4 +112,5 @@ export default {
     emailExists,
     insertFile,
     getAllFiles,
+    getAllFilesByUserID,
 }
