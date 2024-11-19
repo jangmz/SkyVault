@@ -98,6 +98,9 @@ async function getAllFilesByUserID(userID) {
     const userFiles = await prisma.file.findMany({
         where: {
             userID: userID
+        },
+        include: {
+            folder: true
         }
     });
 
