@@ -8,16 +8,17 @@
     <title><%= title %></title>
 </head>
 <body>
+    <% if (!locals.user) { %>
+        <%- include("partials/menu.ejs") %>
+    <% } %>
+    
     <div class="container-fluid">
-        <% if (!locals.user) { %>
-            <%- include("partials/menu.ejs") %>
-        <% } %>
-        <div class="row">
+        <div class="row justify-content-center">
             <% if (locals.user) { %>
                 <%- include("partials/sidemenu.ejs") %>
             <% } %>
 
-            <main class="col-md-9 col-lg-10 gy-4 gx-5">
+            <main class="col-md-9 col-lg-10 p-4">
                 <h1 class="text-center"><%= title %></h1>
                 <%- body %>
             </main>
