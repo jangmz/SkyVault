@@ -13,6 +13,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Folder {
+  id      Int    @id @default(autoincrement())
+  name    String @unique
+  created String
+  user    User   @relation(fields: [userID], references: [id])
+  userID  Int
+}
+
 model File {
   id      Int    @id @default(autoincrement())
   name    String
@@ -32,9 +40,10 @@ model Session {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  username String  @unique
+  id       Int      @id @default(autoincrement())
+  username String   @unique
   password String
-  email    String? @unique
+  email    String?  @unique
   File     File[]
+  Folder   Folder[]
 }
