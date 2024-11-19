@@ -8,24 +8,21 @@
     <title><%= title %></title>
 </head>
 <body>
-    <header>
-        <!--<% if (!locals.user) { %>
+    <div class="container-fluid">
+        <% if (!locals.user) { %>
             <%- include("partials/menu.ejs") %>
-        <% } %>-->
-    <%- include("partials/menu.ejs") %>
-    </header>
-    <main>
-        <div class="container-fluid">
-            <!--<% if (locals.user) { %>
+        <% } %>
+        <div class="row">
+            <% if (locals.user) { %>
                 <%- include("partials/sidemenu.ejs") %>
-            <% } %>-->
-            <h1 class="text-center"><%= title %></h1>
-            <%- body %>
+            <% } %>
+
+            <main class="col-md-9 col-lg-10 gy-4 gx-5">
+                <h1 class="text-center"><%= title %></h1>
+                <%- body %>
+            </main>
         </div>
-    </main>
-    <footer>
-        <p>&copy; 2024 Jan Jankovič</p>
-    </footer>
+    </div>
     <!-- Bootstrap JavaScript and dependencies (jQuery and Popper.js) -->
     <script src="/js/bootstrap.bundle.min.js"></script>
 </body>
