@@ -75,7 +75,8 @@ async function insertFile(fileData) {
                 size: fileData.size,
                 created: fileData.created,
                 path: fileData.path,
-                userID: fileData.userID
+                userID: fileData.userID,
+                folderID: fileData.folderID
             }
         })
 
