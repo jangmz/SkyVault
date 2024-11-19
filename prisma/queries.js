@@ -104,6 +104,31 @@ async function getAllFilesByUserID(userID) {
     return userFiles;
 }
 
+// inserts new folder data into DB
+async function createFolder(folderData) {
+    const folder = await prisma.folder.create({
+        data: {
+            name: folderData.name,
+            created: folderData.created,
+            userID: folderData.userID,
+            path: folderData.path
+        }
+    })
+
+    return folder;
+}
+
+// returns all users folders by userID
+async function getFoldersByUserID(userID) {
+    const folders = await prisma.folder.findMany({
+        where: {
+            userID: userID
+        }
+    });
+
+    return folders;
+}
+
 export default {
     createUser,
     findUserByUsername,
@@ -113,4 +138,6 @@ export default {
     insertFile,
     getAllFiles,
     getAllFilesByUserID,
+    createFolder,
+    getFoldersByUserID,
 }
