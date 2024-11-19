@@ -4,17 +4,18 @@ import dotenv from "dotenv";
 import express from "express";
 import expressSession from "express-session";
 import { PrismaSessionStore } from "@quixo3/prisma-session-store";
-import { Prisma, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import expressEjsLayouts from "express-ejs-layouts";
 import passport from "passport";
+import { setLocalsUser } from "./middleware/authCheck.js";
+import { errorHandler } from "./middleware/error.js";
 import homeRouter from "./routes/homeRouter.js";
 import signUpRouter from "./routes/signUpRouter.js";
 import logInRouter from "./routes/logInRouter.js";
 import logOutRouter from "./routes/logOutRouter.js";
-import { errorHandler } from "./middleware/error.js";
 import skyVaultRouter from "./routes/skyVaultRouter.js";
-import { setLocalsUser } from "./middleware/authCheck.js";
 import uploadRouter from "./routes/uploadRouter.js";
+import folderRouter from "./routes/folderRouter.js";
 
 const app = express();
 dotenv.config();
@@ -71,6 +72,7 @@ app.use("/log-in", logInRouter);
 app.use("/log-out", logOutRouter);
 app.use("/sky-vault", skyVaultRouter);
 app.use("/upload", uploadRouter);
+app.use("/folders", folderRouter);
 
 // error handling
 app.use(errorHandler);
