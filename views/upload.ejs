@@ -6,7 +6,17 @@
                     <label for="file" class="form-label">File</label>
                     <input type="file" name="file" id="file" class="form-control">
                 </div>
-
+                <% if (folders.length !== 0) { %>
+                    <div class="form-group mt-3">
+                        <label for="folder" class="form-label">Folder</label>
+                        <select name="folder" id="folder" class="form-control">
+                                <option value="null">No Folder</option>
+                            <% folders.map(folder => { %>
+                                <option value="<%= folder.id %>"><%= folder.name %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                <% } %>
                 <button type="submit" class="btn btn-primary w-100 mt-3">Upload</button>
             </form>
         </div>
