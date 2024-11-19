@@ -17,6 +17,7 @@ model Folder {
   id      Int    @id @default(autoincrement())
   name    String @unique
   created String
+  path    String
   user    User   @relation(fields: [userID], references: [id])
   userID  Int
 }
