@@ -14,25 +14,26 @@ datasource db {
 }
 
 model Folder {
-  id      Int    @id @default(autoincrement())
-  name    String @unique
-  created String
-  path    String
-  user    User   @relation(fields: [userID], references: [id])
-  userID  Int
-  File File[]
+  id       Int    @id @default(autoincrement())
+  name     String @unique
+  created  String
+  path     String
+  userID   Int
+  parentID Int?
+  File     File[]
+  user     User   @relation(fields: [userID], references: [id])
 }
 
 model File {
-  id      Int    @id @default(autoincrement())
-  name    String
-  type    String
-  size    Int
-  created String
-  path    String
-  user    User   @relation(fields: [userID], references: [id])
-  userID  Int
-  folder Folder? @relation(fields: [folderID], references: [id])
+  id       Int     @id @default(autoincrement())
+  name     String
+  type     String
+  size     Int
+  created  String
+  path     String
+  user     User    @relation(fields: [userID], references: [id])
+  userID   Int
+  folder   Folder? @relation(fields: [folderID], references: [id])
   folderID Int?
 }
 

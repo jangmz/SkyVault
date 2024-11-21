@@ -133,6 +133,27 @@ async function getFoldersByUserID(userID) {
     return folders;
 }
 
+// returns folders and files within a specific folder, null = root folder
+async function getFolderContent(userID, parentID = null) {
+    // fetching subfolders
+    const folders = await prisma.folder.findMany({
+        where: {
+            userID: userID,
+            parentID: parentID // null = root subfolders
+        }
+    });
+
+    // fetching files in the folder
+    const files = await prisma.file.findMany({
+        where: {
+            userID: userID,
+            folderID: parentID // null = root files
+        }
+    });
+
+    return { folders, files };
+}
+
 export default {
     createUser,
     findUserByUsername,
@@ -144,4 +165,5 @@ export default {
     getAllFilesByUserID,
     createFolder,
     getFoldersByUserID,
+    getFolderContent
 }
