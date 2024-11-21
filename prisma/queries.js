@@ -2,6 +2,10 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+/*
+        ===== USERS =====
+*/
+
 // creates a new user
 async function createUser(user) {
     try {
@@ -65,6 +69,10 @@ async function emailExists(email) {
     else return false;
 }
 
+/*
+        ===== FILES =====
+*/
+
 // insert new uploaded file data
 async function insertFile(fileData) {
     try {
@@ -107,6 +115,43 @@ async function getAllFilesByUserID(userID) {
 
     return userFiles;
 }
+
+// update file name
+async function updateFileName(id, newName) {
+    try {
+        const updatedFile = await prisma.file.update({
+            where: {
+                id: id
+            },
+            data: {
+                name: newName
+            }
+        })
+
+        return updatedFile;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+// delete file
+async function deleteFile(id) {
+    try {
+        const deletedFile = await prisma.file.delete({
+            where: {
+                id: id
+            }
+        })
+
+        console.log(`Deleted file: ${deletedFile.name} (ID: ${deletedFile.id})`);
+    } catch (error) {
+        
+    }
+}
+
+/*
+        ===== FOLDERS =====
+*/
 
 // inserts new folder data into DB
 async function createFolder(folderData) {
@@ -165,6 +210,53 @@ async function getFolderContent(userID, parentID = null) {
     return { folders, files };
 }
 
+// update folder name
+async function updateFolderName(id, newName) {
+    try {
+        const updatedFolder = await prisma.folder.update({
+            where: {
+                id: id
+            },
+            data: {
+                name: newName
+            }
+        });
+
+        return updateFolder; // returns updated data if successfully updated
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+// delete folder and its files
+async function deleteFolder(id) {
+    // delete files in folder
+    try {
+        const deletedFiles = await prisma.file.deleteMany({
+            where: {
+                folderID: id
+            }
+        })
+
+        console.log(`Number of deleted files: ${deletedFiles}`);
+    } catch (error) {
+        console.error(error);
+    }
+
+    // delete folder
+    try {
+        const deletedFolder = await prisma.folder.delete({
+            where: {
+                id: id
+            }
+        })
+
+        console.log(`Deleted folder: ${deletedFolder.name} (ID: ${deletedFolder.id})`);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 export default {
     createUser,
     findUserByUsername,
@@ -174,8 +266,12 @@ export default {
     insertFile,
     getAllFiles,
     getAllFilesByUserID,
+    updateFileName,
+    deleteFile,
     createFolder,
     getFoldersByUserID,
     getFolderData,
-    getFolderContent
+    getFolderContent,
+    updateFolderName,
+    deleteFolder,
 }
