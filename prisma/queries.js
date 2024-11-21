@@ -133,6 +133,17 @@ async function getFoldersByUserID(userID) {
     return folders;
 }
 
+// returns folder data by folder id
+async function getFolderData(folderID) {
+    const folder = await prisma.folder.findUnique({
+        where: {
+            id: folderID
+        }
+    });
+
+    return folder;
+}
+
 // returns folders and files within a specific folder, null = root folder
 async function getFolderContent(userID, parentID = null) {
     // fetching subfolders
@@ -165,5 +176,6 @@ export default {
     getAllFilesByUserID,
     createFolder,
     getFoldersByUserID,
+    getFolderData,
     getFolderContent
 }

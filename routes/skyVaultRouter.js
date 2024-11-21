@@ -5,5 +5,6 @@ import skyVaultController from "../controllers/skyVaultController.js";
 const skyVaultRouter = Router();
 
 skyVaultRouter.get("/", isAuthenticated, skyVaultController.skyVaultGet);
+skyVaultRouter.get("/folder/:folderID", isAuthenticated, skyVaultController.skyVaultFolderGet);
 
 export default skyVaultRouter;

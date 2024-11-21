@@ -1,27 +1,43 @@
-<% if(filesByFolder) { %>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Size</th>
-                <th scope="col">Created</th>
-                <th scope="col">Folder</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% Object.keys(filesByFolder).forEach(folderName => { %>
-                <% filesByFolder[folderName].forEach(file => { %>
-                    <tr>
-                        <td><%= file.name %></td>
-                        <td><%= file.size %> B</td>
-                        <td><%= file.created %></td>
-                        <td><%= folderName %></td>
-                    </tr>
-                <% }) %>
-            <% }) %>
-        </tbody>
-        
-    </table>
-<% } else { %>
-    <p>No files.</p>
+
+<% if (currentFolderId) { %>
+   <a href="/sky-vault?folderId=<%= folders.find(f => f.id === currentFolderId)?.parentId || '' %>">
+        <button class="btn btn-secondary">BACK</button>
+   </a> 
 <% } %>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <% folders.forEach(folder => { %>
+            <div class="col-md-3">
+                <div class="card bg-secondary text-center">
+                    <div class="card-body">
+                        <a href="/sky-vault/folder/<%= folder.id %>" class="stretched-link text-decoration-none">
+                            <h5 class="card-title mt-2 text-light"><%= folder.name %></h5>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+</div>
+
+<table class="table mt-3">
+    <thead>
+        <tr>
+            <th scope="col">File</th>
+            <th scope="col">Size</th>
+            <th scope="col">Type</th>
+            <th scope="col">Created</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% files.forEach(file => { %>
+                <tr>
+                    <td><%= file.name %></td>
+                    <td><%= file.size %></td>
+                    <td><%= file.type %></td>
+                    <td><%= file.created %></td>
+                </tr>
+        <% }) %>
+    </tbody>
+</table>
