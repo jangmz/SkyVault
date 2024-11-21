@@ -12,6 +12,11 @@
                 </div>    
                 <button type="submit" class="btn btn-primary w-100">Log In</button>
             </form>
+            <% if (message.error && message.error.length > 0) { %>
+                <div class="alert alert-danger mt-2" role="alert">
+                    <%= message.error[0] %>
+                </div>
+            <% } %>
         </div>
     </div>
 </div>

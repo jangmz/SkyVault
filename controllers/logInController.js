@@ -45,7 +45,7 @@ passport.deserializeUser(async (id, done) => {
 // GET /log-in -> form
 function logInGet(req, res, next) {
     res.render("log-in", {
-        title: "Log In"
+        title: "Log In",
     });
 }
 

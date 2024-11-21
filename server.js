@@ -7,6 +7,7 @@ import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 import { PrismaClient } from "@prisma/client";
 import expressEjsLayouts from "express-ejs-layouts";
 import passport from "passport";
+import flash from "connect-flash";
 import { setLocalsUser } from "./middleware/authCheck.js";
 import { errorHandler } from "./middleware/error.js";
 import homeRouter from "./routes/homeRouter.js";
@@ -16,6 +17,7 @@ import logOutRouter from "./routes/logOutRouter.js";
 import skyVaultRouter from "./routes/skyVaultRouter.js";
 import uploadRouter from "./routes/uploadRouter.js";
 import folderRouter from "./routes/folderRouter.js";
+import { flashMessages } from "./middleware/messages.js";
 
 const app = express();
 dotenv.config();
@@ -63,6 +65,8 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(setLocalsUser);
+app.use(flash());
+app.use(flashMessages);
 //app.use(loggs);
 
 // routes
