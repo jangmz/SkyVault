@@ -1,0 +1,13 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <form action="/sky-vault/edit-file/<%= file.id %>" method="post" class="border rounded p-5">
+                <div class="mb-3">
+                    <label for="filename" class="form-label">File name</label>
+                    <input type="text" name="filename" id="filename" value="<%= file.name %>" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Update</button>
+            </form>
+        </div>
+    </div>
+</div>

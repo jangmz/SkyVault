@@ -58,15 +58,42 @@ async function deleteFile(req, res, next){
 }
 
 // GET /sky-vault/edit-file/:fileID -> form for editing file
-function editFileGet(req, res, next) {
+async function editFileGet(req, res, next) {
+    const fileID = parseInt(req.params.fileID);
 
+    const file = await db.getFileData(fileID);
+
+    res.render("edit-file", {
+        title: "Edit file",
+        file
+    });
 }
 
 // POST /sky-vault/edit-file/:fileID -> logic for updating db record
 async function editFilePost(req, res, next) {
-    // update file in the filesystem
+    const file = await db.getFileData(parseInt(req.params.fileID));
+    const newFileName = req.body.filename;
+    const newPath = path.join(path.dirname(file.path), newFileName);
 
-    // udpate file in DB
+    // update file in filesystem
+    fs.rename(file.path, newPath, (error) => {
+        if (error) {
+            next(error);
+        }
+    });
+
+    // update file in DB
+    file.path = newPath;
+    file.name = newFileName;
+    
+    try {
+        await db.updateFileData(req.user.id, file);
+        console.log("File data updated.");
+    } catch (error) {
+        next(error);
+    }
+    
+    res.redirect(`/sky-vault`);
 }
 
 // GET /sky-vault/delete-folder/:folderID
@@ -115,8 +142,6 @@ async function editFolderPost(req, res, next) {
         if (error) {
             next(error);
         }
-
-        console.log("Folder renamed.");
     });
 
     // update folder in DB
@@ -124,6 +149,7 @@ async function editFolderPost(req, res, next) {
     folder.name = newFolderName;
     try {
         await db.updateFolder(req.user.id, folder);
+        console.log("Folder data updated.");
     } catch (error) {
         next(error);
     }
