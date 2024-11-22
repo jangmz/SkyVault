@@ -54,7 +54,11 @@
         <% files.forEach(file => { %>
                 <tr>
                     <td><%= file.name %></td>
-                    <td><%= file.size %></td>
+                    <% if (file.size > 100000) { %>
+                        <td><%= (file.size / 1000000).toFixed(2) %> MB</td>
+                    <% } else { %>
+                        <td><%= file.size %> KB</td>
+                    <% } %>                    
                     <td><%= file.type %></td>
                     <td><%= file.created %></td>
                     <td>
