@@ -1,5 +1,6 @@
 import db from "../prisma/queries.js";
 import fs from "node:fs";
+import path from "path";
 
 // GET /sky-vault -> root folders and files
 async function skyVaultGet(req, res, next) {
@@ -92,15 +93,42 @@ async function deleteFolder(req, res, next) {
 }
 
 // GET /sky-vault/edit-folder/:folderID -> form for data folder update
-function editFolderGet(req, res, next) {
+async function editFolderGet(req, res, next) {
+    const folderID = parseInt(req.params.folderID);
 
+    const folder = await db.getFolderData(req.user.id, folderID);
+
+    res.render("edit-folder", {
+        title: "Edit folder",
+        folder
+    })
 }
 
 // POST /sky-vault/edit-folder/:folderID -> update folder data in filesystem and DB
 async function editFolderPost(req, res, next) {
+    const folder = await db.getFolderData(req.user.id, parseInt(req.params.folderID));
+    const newFolderName = req.body.foldername;
+    const newPath = path.join(path.dirname(folder.path), newFolderName);
+
     // update folder in filesystem
+    fs.rename(folder.path, newPath, (error) => {
+        if (error) {
+            next(error);
+        }
+
+        console.log("Folder renamed.");
+    });
 
     // update folder in DB
+    folder.path = newPath;
+    folder.name = newFolderName;
+    try {
+        await db.updateFolder(req.user.id, folder);
+    } catch (error) {
+        next(error);
+    }
+    
+    res.redirect(`/sky-vault/folder/${req.params.folderID}`);
 }
 
 export default {

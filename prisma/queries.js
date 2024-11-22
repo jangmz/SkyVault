@@ -227,20 +227,22 @@ async function getFolderContent(userID, parentID = null) {
 }
 
 // update folder name
-async function updateFolderName(id, newName) {
+async function updateFolder(userID, folder) {
     try {
         const updatedFolder = await prisma.folder.update({
             where: {
-                id: id
+                id: folder.id,
+                userID: userID
             },
             data: {
-                name: newName
+                name: folder.name,
+                path: folder.path
             }
         });
 
         return updatedFolder; // returns updated data if successfully updated
     } catch (error) {
-        console.error(error);
+        throw new Error(error);
     }
 }
 
@@ -291,6 +293,6 @@ export default {
     getFoldersByUserID,
     getFolderData,
     getFolderContent,
-    updateFolderName,
+    updateFolder,
     deleteFolderAndFiles,
 }
