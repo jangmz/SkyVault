@@ -6,8 +6,11 @@ const skyVaultRouter = Router();
 
 skyVaultRouter.get("/", isAuthenticated, skyVaultController.skyVaultGet);
 skyVaultRouter.get("/folder/:folderID", isAuthenticated, skyVaultController.skyVaultFolderGet);
-skyVaultRouter.get("/delete-file/:fileID", isAuthenticated, skyVaultController.deleteFilePost);
+skyVaultRouter.get("/delete-file/:fileID", isAuthenticated, skyVaultController.deleteFile);
 skyVaultRouter.get("/edit-file/:fileID", isAuthenticated, skyVaultController.editFileGet);
 skyVaultRouter.post("/edit-file/:fileID", isAuthenticated, skyVaultController.editFilePost);
+skyVaultRouter.get("/delete-folder/:folderID", isAuthenticated, skyVaultController.deleteFolder);
+skyVaultRouter.get("/edit-folder/:folderID", isAuthenticated, skyVaultController.editFolderGet);
+skyVaultRouter.post("/edit-folder/:folderID", isAuthenticated, skyVaultController.editFolderPost);
 
 export default skyVaultRouter;

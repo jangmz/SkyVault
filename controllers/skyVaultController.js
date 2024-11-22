@@ -22,7 +22,7 @@ async function skyVaultFolderGet(req, res, next) {
     const { folders, files } = await db.getFolderContent(req.user.id, folderID);
 
     // get folder name for title
-    const folder = await db.getFolderData(folderID);
+    const folder = await db.getFolderData(req.user.id, folderID);
     
     // render page
     res.render("sky-vault", {
@@ -33,8 +33,8 @@ async function skyVaultFolderGet(req, res, next) {
     });
 }
 
-// POST /sky-vault/delete-file/:fileID 
-async function deleteFilePost(req, res, next){
+// GET /sky-vault/delete-file/:fileID 
+async function deleteFile(req, res, next){
     // delete file in the filesystem
     const filePath = await db.getFilePath(parseInt(req.params.fileID));
     
@@ -48,7 +48,7 @@ async function deleteFilePost(req, res, next){
 
     // delete file in DB
     try {
-        await db.deleteFile(parseInt(req.params.fileID));
+        await db.deleteFile(req.user.id, parseInt(req.params.fileID));
     } catch (error) {
         next(error);
     }
@@ -68,10 +68,48 @@ async function editFilePost(req, res, next) {
     // udpate file in DB
 }
 
+// GET /sky-vault/delete-folder/:folderID
+async function deleteFolder(req, res, next) {
+    // delete folder in filesystem (with all it's files)
+    const folder = await db.getFolderData(req.user.id, parseInt(req.params.folderID));
+    //const folderFiles = folder.File;
+
+    fs.rm(folder.path, { recursive: true }, (error) => {
+        if (error) {
+            next(error);
+        }
+
+        console.log(`Folder "${folder.name}", all its subfolders & files have been deleted.`);
+    });
+
+    try {
+        await db.deleteFolderAndFiles(req.user.id, parseInt(req.params.folderID));
+    } catch (error) {
+        next(error);
+    }
+
+    res.redirect("/sky-vault");
+}
+
+// GET /sky-vault/edit-folder/:folderID -> form for data folder update
+function editFolderGet(req, res, next) {
+
+}
+
+// POST /sky-vault/edit-folder/:folderID -> update folder data in filesystem and DB
+async function editFolderPost(req, res, next) {
+    // update folder in filesystem
+
+    // update folder in DB
+}
+
 export default {
     skyVaultGet,
     skyVaultFolderGet,
-    deleteFilePost,
+    deleteFile,
     editFileGet,
     editFilePost,
+    deleteFolder,
+    editFolderGet,
+    editFolderPost,
 }

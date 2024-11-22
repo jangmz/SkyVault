@@ -146,11 +146,12 @@ async function updateFileName(id, newName) {
 }
 
 // delete file
-async function deleteFile(id) {
+async function deleteFile(userID, folderID) {
     try {
         const deletedFile = await prisma.file.delete({
             where: {
-                id: id
+                id: folderID,
+                userID: userID
             }
         })
 
@@ -190,10 +191,14 @@ async function getFoldersByUserID(userID) {
 }
 
 // returns folder data by folder id
-async function getFolderData(folderID) {
+async function getFolderData(userID, folderID) {
     const folder = await prisma.folder.findUnique({
         where: {
-            id: folderID
+            id: folderID,
+            userID: userID,
+        },
+        include: {
+            File: true
         }
     });
 
@@ -240,16 +245,17 @@ async function updateFolderName(id, newName) {
 }
 
 // delete folder and its files
-async function deleteFolder(id) {
+async function deleteFolderAndFiles(userID, folderID) {
     // delete files in folder
     try {
         const deletedFiles = await prisma.file.deleteMany({
             where: {
-                folderID: id
+                folderID: folderID,
+                userID: userID
             }
         })
 
-        console.log(`Number of deleted files: ${deletedFiles}`);
+        console.log(`Number of deleted files: ${deletedFiles.count}`);
     } catch (error) {
         console.error(error);
     }
@@ -258,7 +264,8 @@ async function deleteFolder(id) {
     try {
         const deletedFolder = await prisma.folder.delete({
             where: {
-                id: id
+                id: folderID,
+                userID: userID
             }
         })
 
@@ -285,5 +292,5 @@ export default {
     getFolderData,
     getFolderContent,
     updateFolderName,
-    deleteFolder,
+    deleteFolderAndFiles,
 }
