@@ -116,6 +116,17 @@ async function getAllFilesByUserID(userID) {
     return userFiles;
 }
 
+// return path to the file
+async function getFilePath(fileID) {
+    const { path } = await prisma.file.findUnique({
+        where: {
+            id: fileID
+        }
+    })
+
+    return path;
+}
+
 // update file name
 async function updateFileName(id, newName) {
     try {
@@ -145,7 +156,7 @@ async function deleteFile(id) {
 
         console.log(`Deleted file: ${deletedFile.name} (ID: ${deletedFile.id})`);
     } catch (error) {
-        
+        console.error(error);
     }
 }
 
@@ -222,7 +233,7 @@ async function updateFolderName(id, newName) {
             }
         });
 
-        return updateFolder; // returns updated data if successfully updated
+        return updatedFolder; // returns updated data if successfully updated
     } catch (error) {
         console.error(error);
     }
@@ -266,6 +277,7 @@ export default {
     insertFile,
     getAllFiles,
     getAllFilesByUserID,
+    getFilePath,
     updateFileName,
     deleteFile,
     createFolder,

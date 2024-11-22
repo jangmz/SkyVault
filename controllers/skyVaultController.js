@@ -1,4 +1,5 @@
 import db from "../prisma/queries.js";
+import fs from "node:fs";
 
 // GET /sky-vault -> root folders and files
 async function skyVaultGet(req, res, next) {
@@ -32,7 +33,45 @@ async function skyVaultFolderGet(req, res, next) {
     });
 }
 
+// POST /sky-vault/delete-file/:fileID 
+async function deleteFilePost(req, res, next){
+    // delete file in the filesystem
+    const filePath = await db.getFilePath(parseInt(req.params.fileID));
+    
+    fs.unlink(filePath, (error) => {
+        if (error) {
+            next(error);
+        }
+
+        console.log(`File: ${filePath} has been removed from the filesystem.`);
+    });
+
+    // delete file in DB
+    try {
+        await db.deleteFile(parseInt(req.params.fileID));
+    } catch (error) {
+        next(error);
+    }
+
+    res.redirect("/sky-vault");
+}
+
+// GET /sky-vault/edit-file/:fileID -> form for editing file
+function editFileGet(req, res, next) {
+
+}
+
+// POST /sky-vault/edit-file/:fileID -> logic for updating db record
+async function editFilePost(req, res, next) {
+    // update file in the filesystem
+
+    // udpate file in DB
+}
+
 export default {
     skyVaultGet,
     skyVaultFolderGet,
+    deleteFilePost,
+    editFileGet,
+    editFilePost,
 }
