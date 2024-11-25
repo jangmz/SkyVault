@@ -10,9 +10,16 @@
                     <div class="form-group mt-3">
                         <label for="folder" class="form-label">Folder</label>
                         <select name="folder" id="folder" class="form-control">
-                                <option value="null"></option>
+                            <option value="null"></option>
                             <% folders.map(folder => { %>
-                                <option value="<%= folder.id %>"><%= folder.name %></option>
+                                <% if (folder.parentID === null) { %>
+                                    <option value="<%= folder.id %>"><%= folder.name %></option>
+                                    <% folders.map(folder2 => { %>
+                                        <% if (folder.id === folder2.parentID) { %>
+                                            <option value="<%= folder2.id %>">-<%= folder2.name %></option>
+                                        <% } %>
+                                    <%})%>
+                                <% } %>
                             <% }) %>
                         </select>
                     </div>
