@@ -1,8 +1,8 @@
 
 <% if (currentFolderId) { %>
-   <a href="/sky-vault?folderId=<%= folders.find(f => f.id === currentFolderId)?.parentId || '' %>">
+   <a href="/sky-vault/folder/<%= parentFolder %>">
         <button class="btn btn-secondary">BACK</button>
-   </a> 
+   </a>
 <% } %>
 
 <div class="container mt-5">

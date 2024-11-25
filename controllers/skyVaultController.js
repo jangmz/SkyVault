@@ -11,6 +11,7 @@ async function skyVaultGet(req, res, next) {
     res.render("sky-vault", {
         title: "My files",
         currentFolderId: null, // null = root folder
+        parentFolder: null,
         folders,
         files
     });
@@ -29,6 +30,7 @@ async function skyVaultFolderGet(req, res, next) {
     res.render("sky-vault", {
         title: folder.name,
         currentFolderId: folderID,
+        parentFolder: folder.parentID,
         folders,
         files
     });

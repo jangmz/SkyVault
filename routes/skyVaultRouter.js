@@ -5,6 +5,7 @@ import skyVaultController from "../controllers/skyVaultController.js";
 const skyVaultRouter = Router();
 
 skyVaultRouter.get("/", isAuthenticated, skyVaultController.skyVaultGet);
+skyVaultRouter.get("/folder", isAuthenticated, skyVaultController.skyVaultGet);
 skyVaultRouter.get("/folder/:folderID", isAuthenticated, skyVaultController.skyVaultFolderGet);
 skyVaultRouter.get("/delete-file/:fileID", isAuthenticated, skyVaultController.deleteFile);
 skyVaultRouter.get("/edit-file/:fileID", isAuthenticated, skyVaultController.editFileGet);
