@@ -6,7 +6,24 @@
                     <label for="foldername" class="form-label">Folder name</label>
                     <input type="text" name="foldername" id="foldername" class="form-control">
                 </div>
-
+                <% if (folders.length !== 0) { %>
+                    <div class="form-group">
+                        <label for="parentFolder" class="form-label">Parent folder</label>
+                        <select name="parentFolder" id="parentFolder" class="form-control">
+                            <option value="null"></option>
+                            <% folders.map(folder => { %>
+                                <% if (folder.parentID === null) { %>
+                                    <option value="<%= folder.id %>"><%= folder.name %></option>
+                                    <% folders.map(folder2 => {
+                                        if (folder.id === folder2.parentID) { %>
+                                            <option value="<%= folder2.id %>">-<%= folder2.name %></option>
+                                        <% } %>
+                                    <% }) %>
+                                <% } %>
+                            <% }) %>
+                        </select>
+                    </div>
+                <% } %>
                 <button type="submit" class="btn btn-primary w-100 mt-3">Create</button>
             </form>
         </div>

@@ -7,9 +7,13 @@ const __filename = fileURLToPath(import.meta.url); // current file
 const __dirname = path.dirname(__filename); // current directory
 
 // GET /folders/create -> form for creating a new folder
-function folderGet(req, res, next) {
+async function folderGet(req, res, next) {
+    // get current user folders
+    const folders = await db.getFoldersByUserID(req.user.id);
+
     res.render("create-folder", {
-        title: "Create new folder"
+        title: "Create new folder",
+        folders,
     });
 }
 
@@ -22,7 +26,8 @@ async function folderPost(req, res, next) {
         name: req.body.foldername,
         created: new Date().toLocaleDateString(),
         path: folderPath,
-        userID: req.user.id
+        userID: req.user.id,
+        parentID: parseInt(req.body.parentFolder) || null,
     }
 
     // create folder in the filesystem
