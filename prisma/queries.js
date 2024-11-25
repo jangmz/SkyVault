@@ -189,7 +189,8 @@ async function createFolder(folderData) {
             name: folderData.name,
             created: folderData.created,
             userID: folderData.userID,
-            path: folderData.path
+            path: folderData.path,
+            parentID: folderData.parentID,
         }
     })
 
