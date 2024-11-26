@@ -26,29 +26,33 @@ async function signUpPost(req, res, next) {
         error.status = 400;
         error.details = details;
 
-        next(error);
+        return next(error);
     }
 
     const user = matchedData(req); // save form data
 
-    // encrypt password
     try {
+        // encrypt password
         const saltRounds = 10;
         user.password = await bcrypt.hash(user.password1, saltRounds);
+
+        // insert user into the database
+        await db.createUser(user);
+        console.log(`User added to database: ${user.username}`);
+
+        // ensure shared bucket exists
+        await supabase.sharedBucketCheck();
+
+        // create users folder
+        await supabase.createUserFolder(user);
+
+        res.render("log-in", {
+            title: "Log In"
+        });
     } catch (error) {
-        next(error);
+        console.error(`Error in sign up process: ${error.message}`);
+        return next(error);
     }
-
-    // create supabase bucket for the user (name = username)
-    const bucketName = user.username;
-    await supabase.createBucket(bucketName);
-
-    // insert data into database
-    await db.createUser(user);
-
-    res.render("log-in", {
-        title: "Log In"
-    });
 }
 
 export default {

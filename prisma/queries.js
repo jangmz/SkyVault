@@ -20,6 +20,7 @@ async function createUser(user) {
         console.log(userData);
     } catch (error) {
         console.error(error);
+        return error;
     }
 }
 
