@@ -1,4 +1,5 @@
 import db from "../prisma/queries.js";
+import supabase from "../supabase/supabase.js";
 import { matchedData, validationResult } from "express-validator";
 import bcrypt from "bcryptjs";
 
@@ -25,7 +26,7 @@ async function signUpPost(req, res, next) {
         error.status = 400;
         error.details = details;
 
-        return next(error); // error handling middleware
+        next(error);
     }
 
     const user = matchedData(req); // save form data
@@ -35,8 +36,12 @@ async function signUpPost(req, res, next) {
         const saltRounds = 10;
         user.password = await bcrypt.hash(user.password1, saltRounds);
     } catch (error) {
-        return next(error);
+        next(error);
     }
+
+    // create supabase bucket for the user (name = username)
+    const bucketName = user.username;
+    await supabase.createBucket(bucketName);
 
     // insert data into database
     await db.createUser(user);
