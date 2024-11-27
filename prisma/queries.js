@@ -92,7 +92,7 @@ async function insertFile(fileData) {
         console.log("File uploaded to DB");
         console.log(file);
     } catch (error) {
-        console.error(error);
+        throw new Error(error);
     }
 }
 

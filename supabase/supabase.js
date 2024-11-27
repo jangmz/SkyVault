@@ -8,26 +8,6 @@ const supabase = createClient(
     process.env.SUPABASE_KEY
 )
 
-/*
-// creates a bucket in the storage, named by username
-async function createBucket(bucketName) {
-    try {
-        const { data, error } = await supabase.storage.createBucket(bucketName, {
-            public: true, // TODO: configure it to private
-            fileSizeLimit: "5MB",
-        })
-
-        if (error) {
-            throw new Error(error);
-        }
-    
-        console.log("Bucket created:");
-        console.log(data);
-    } catch (error) {
-        throw new Error(error);
-    }   
-}
-*/
 // ensure shared bucket for users exists
 async function sharedBucketCheck() {
     const bucketName = "user-files";
@@ -53,7 +33,6 @@ async function sharedBucketCheck() {
     console.log("Bucket check passed successfully.");
 }
 
-
 // create user's folder
 async function createUserFolder(user) {
     const folderPath = `${user.username}/placeholder.txt`;
@@ -73,12 +52,11 @@ async function createUserFolder(user) {
     }
 }
 
-
 // upload a file to the supabase storage
-async function uploadFile(fileData, file){
+async function uploadFile(fileData){
     const { data, error } = await supabase.storage
         .from("user-files") // shared bucket
-        .upload(fileData.path, file);
+        .upload(fileData.path, fileData);
 
     if (error) throw new Error(error);
 

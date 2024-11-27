@@ -2,10 +2,12 @@ import db from "../prisma/queries.js";
 import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
+import supabase from "../supabase/supabase.js";
 
 const __filename = fileURLToPath(import.meta.url); // current file
 const __dirname = path.dirname(__filename); // current directory
 
+/*
 // configure multer storage
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -21,6 +23,14 @@ const storage = multer.diskStorage({
 const upload = multer({
     storage: storage,
     limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit upload file size
+})
+*/
+
+// store files in memory temporarily
+const storage = multer.memoryStorage();
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 5 * 1024 * 1024}, // 5MB limit
 })
 
 // GET /upload -> upload form
@@ -45,14 +55,30 @@ async function uploadPost(req, res, next) {
         next(error);
     } 
 
-    // uploading a file
+    // create metadata
+    const userFolder = req.user.username;
     const fileData = req.file;
+
     fileData.created = new Date().toLocaleDateString(); // format: DD/MM/YYYY
     fileData.userID = req.user.id;
     // set "null" if there are no folders or if "No Folder" is selected"
     fileData.folderID = req.body.folder === undefined || null ? null : parseInt(req.body.folder);
+    fileData.path = `user-files/${userFolder}/${fileData.originalname}`; // TODO: add folder before "originalname" if file is inserted into the folder 
 
-    await db.insertFile(fileData);
+    console.log(fileData);
+    
+    try {
+        // upload file to supabase
+        const uploadedFile = await supabase.uploadFile(fileData);
+        console.log("File uploaded:");
+        console.log(uploadedFile);
+
+        // insert data into database
+        await db.insertFile(fileData);
+
+    } catch (error) {
+        return next(error);
+    }
 
     res.redirect("/sky-vault");
 }
