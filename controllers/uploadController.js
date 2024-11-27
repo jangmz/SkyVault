@@ -64,6 +64,7 @@ async function uploadPost(req, res, next) {
     // set "null" if there are no folders or if "No Folder" is selected"
     fileData.folderID = req.body.folder === undefined || null ? null : parseInt(req.body.folder);
     fileData.path = `user-files/${userFolder}/${fileData.originalname}`; // TODO: add folder before "originalname" if file is inserted into the folder 
+    // TODO: create a reference to file URL for downloading
 
     console.log(fileData);
     
