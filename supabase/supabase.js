@@ -52,6 +52,25 @@ async function createUserFolder(user) {
     }
 }
 
+// create folder (child)
+async function createFolder(user, folderData) {
+    try {
+        const folderPath = `${user.username}/${folderData.name}/placeholder.txt`;
+        const { data, error } = await supabase.storage
+            .from("user-files")
+            .upload(folderPath, Buffer.from(""), {
+                upsert:true // overwrite if file exists
+        });
+
+        if (error) throw new Error(`Failed to create folder: ${error.message}`);
+
+        console.log(`Folder created:`);
+        console.log(data);
+    } catch (error) {
+        throw new Error(`Folder creation failed: ${error.message}`);
+    }
+}
+
 // upload a file to the supabase storage
 async function uploadFile(fileData){
     const { data, error } = await supabase.storage
@@ -67,5 +86,6 @@ export default {
     //createBucket,
     sharedBucketCheck,
     createUserFolder,
+    createFolder,
     uploadFile,
 }
