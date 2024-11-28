@@ -18,7 +18,7 @@ async function sharedBucketCheck() {
         if (!data) {
             console.log(`Bucket "${bucketName}" not found. Creating it.`);
             const { error: createError } = await supabase.storage.createBucket(bucketName, {
-                public: false, // Make it private by default
+                public: true, // Make it private by default
             });
 
             if (createError) {
@@ -53,13 +53,13 @@ async function createUserFolder(user) {
 }
 
 // create folder (child)
-async function createFolder(user, folderData) {
+async function createFolder(folderData) {
     try {
-        const folderPath = `${user.username}/${folderData.name}/placeholder.txt`;
+        const folderPath = `${folderData.path}/placeholder.txt`;
         const { data, error } = await supabase.storage
             .from("user-files")
             .upload(folderPath, Buffer.from(""), {
-                upsert:true // overwrite if file exists
+                upsert: false, // overwrite if file exists
         });
 
         if (error) throw new Error(`Failed to create folder: ${error.message}`);
@@ -75,11 +75,25 @@ async function createFolder(user, folderData) {
 async function uploadFile(fileData){
     const { data, error } = await supabase.storage
         .from("user-files") // shared bucket
-        .upload(fileData.path, fileData);
+        .upload(fileData.path, fileData.buffer, {
+            contentType: fileData.mimetype, // setting MIME type for proper file handling
+            upsert: true, // overwrite if file exists
+        });
 
     if (error) throw new Error(error);
 
     return data;
+}
+
+// return file download link
+async function getFileUrl(filePath) {
+    const { data, error } = await supabase.storage
+        .from("user-files")
+        .getPublicUrl(filePath);
+    
+    if (error) throw new Error(error);
+
+    return data.publicUrl;
 }
 
 export default {
@@ -88,4 +102,5 @@ export default {
     createUserFolder,
     createFolder,
     uploadFile,
+    getFileUrl,
 }

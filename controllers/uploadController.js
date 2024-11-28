@@ -61,17 +61,21 @@ async function uploadPost(req, res, next) {
 
     fileData.created = new Date().toLocaleDateString(); // format: DD/MM/YYYY
     fileData.userID = req.user.id;
-    fileData.folderID = req.body.folder === undefined || null ? null : parseInt(req.body.folder); // "null" if uploaded to root
-    fileData.path = `${userFolder}/${fileData.originalname}`; // TODO: add folder before "originalname" if file is inserted into the folder 
-    // TODO: create a reference to file URL for downloading
+    fileData.folderID = req.body.folder ? parseInt(req.body.folder) : null; //req.body.folder === undefined || null ? null : parseInt(req.body.folder); // "null" if uploaded to root
+    fileData.path = `${userFolder}/${req.body.folder || ""}/${fileData.originalname}`.replace(/\/\//g, "/");
+    fileData.buffer = req.file.buffer; // buffer from multer memoryStorage
+    // TODO: what if files are in subfolders of folders etc.?
 
     console.log(fileData);
     
     try {
         // upload file to supabase
         const uploadedFile = await supabase.uploadFile(fileData);
-        console.log("File uploaded:");
-        console.log(uploadedFile);
+        console.log("File uploaded:", uploadedFile);
+
+        // get a download link to the file
+        fileData.url = await supabase.getFileUrl(uploadedFile.path);
+        console.log(`Download link: ${fileData.url}`);
 
         // insert data into database
         //await db.insertFile(fileData);
