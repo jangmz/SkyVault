@@ -48,7 +48,7 @@ async function folderPost(req, res, next) {
         await supabase.createFolder(req.user, folderData);
         
         // insert folderData into DB
-        await db.createFolder(folderData);
+        //await db.createFolder(folderData);
     } catch (error) {
         return next(error);
     }

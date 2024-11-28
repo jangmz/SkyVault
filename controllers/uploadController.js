@@ -44,7 +44,7 @@ async function uploadGet(req, res, next) {
     });
 }
 
-// POST /upload -> upload to filesystem / upload to cloud (later)
+// POST /upload -> upload to cloud
 async function uploadPost(req, res, next) {
     // check if there is a file
     if (!req.file) {
@@ -52,7 +52,7 @@ async function uploadPost(req, res, next) {
             message: "Upload error",
             details: "No file uploaded."
         });
-        next(error);
+        return next(error);
     } 
 
     // create metadata
@@ -61,9 +61,8 @@ async function uploadPost(req, res, next) {
 
     fileData.created = new Date().toLocaleDateString(); // format: DD/MM/YYYY
     fileData.userID = req.user.id;
-    // set "null" if there are no folders or if "No Folder" is selected"
-    fileData.folderID = req.body.folder === undefined || null ? null : parseInt(req.body.folder);
-    fileData.path = `user-files/${userFolder}/${fileData.originalname}`; // TODO: add folder before "originalname" if file is inserted into the folder 
+    fileData.folderID = req.body.folder === undefined || null ? null : parseInt(req.body.folder); // "null" if uploaded to root
+    fileData.path = `${userFolder}/${fileData.originalname}`; // TODO: add folder before "originalname" if file is inserted into the folder 
     // TODO: create a reference to file URL for downloading
 
     console.log(fileData);
@@ -75,7 +74,7 @@ async function uploadPost(req, res, next) {
         console.log(uploadedFile);
 
         // insert data into database
-        await db.insertFile(fileData);
+        //await db.insertFile(fileData);
 
     } catch (error) {
         return next(error);
