@@ -70,7 +70,8 @@ async function uploadPost(req, res, next) {
         console.log("File uploaded:", uploadedFile);
 
         // get a download link to the file
-        fileData.url = await supabase.getFileUrl(uploadedFile.path);
+        const downloadUrl = await supabase.getFileUrl(uploadedFile.path);
+        fileData.url = `${downloadUrl}?download`;
         console.log(`Download link: ${fileData.url}`);
 
         // insert data into database
