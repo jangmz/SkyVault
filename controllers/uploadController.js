@@ -56,15 +56,30 @@ async function uploadPost(req, res, next) {
     } 
 
     // create metadata
-    const userFolder = req.user.username;
     const fileData = req.file;
+    let folderPath = "";
 
     fileData.created = new Date().toLocaleDateString(); // format: DD/MM/YYYY
     fileData.userID = req.user.id;
-    fileData.folderID = req.body.folder ? parseInt(req.body.folder) : null; //req.body.folder === undefined || null ? null : parseInt(req.body.folder); // "null" if uploaded to root
-    fileData.path = `${userFolder}/${req.body.folder || ""}/${fileData.originalname}`.replace(/\/\//g, "/");
+    fileData.folderID = req.body.folder ? parseInt(req.body.folder) : null; // "null" if uploaded to root
     fileData.buffer = req.file.buffer; // buffer from multer memoryStorage
-    // TODO: what if files are in subfolders of folders etc.?
+
+    // resolve full folder path from folder hierarchy
+    async function resolveFolderPath(folderID) {
+        const folder = await db.getFolderData(req.user.id, folderID);
+        if (folder) {
+            folderPath = `${folder.name}/${folderPath}`;
+            if (folder.parentID) {
+                await resolveFolderPath(folder.parentID);
+            }
+        }
+    }
+
+    if (fileData.folderID) {
+        await resolveFolderPath(fileData.folderID);
+    }
+
+    fileData.path = `${req.user.username}/${folderPath}${fileData.originalname}`.replace(/\/\//g, "/");
 
     console.log(fileData);
     
@@ -78,7 +93,7 @@ async function uploadPost(req, res, next) {
         console.log(`Download link: ${fileData.url}`);
 
         // insert data into database
-        //await db.insertFile(fileData);
+        await db.insertFile(fileData);
 
     } catch (error) {
         return next(error);
@@ -92,17 +107,3 @@ export default {
     uploadGet,
     uploadPost,
 }
-
-/*
-FILE DATA:
-
-    fieldname: "file"
-    originalname: "test_upload.txt"
-    encoding: 7bit
-    mimetype: "text/plain"
-    destination: "../public/uploads"
-    filename: "asdaoasdoiufsdf8sdf87sdf"
-    path: "../public/uploads/asdaoasdoiufsdf8sdf87sdf"
-    size: 25
-    created: "18/11/2024"
-*/

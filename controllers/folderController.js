@@ -14,6 +14,7 @@ async function folderGet(req, res, next) {
 
 // POST /folders/create -> create new folder in the filesystem/cloud, add reference to the database
 async function folderPost(req, res, next) {
+    
     // recursively building folder path
     async function buildFolderPath(parentID, childName) {
         if (!parentID) {
