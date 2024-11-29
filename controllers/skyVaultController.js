@@ -70,20 +70,17 @@ async function editFileGet(req, res, next) {
 async function editFilePost(req, res, next) {
     const file = await db.getFileData(parseInt(req.params.fileID));
     const newFileName = req.body.filename;
-    const newPath = path.join(path.dirname(file.path), newFileName);
+    const oldFilePath = file.path;
 
-    // update file in filesystem
-    fs.rename(file.path, newPath, (error) => {
-        if (error) {
-            next(error);
-        }
-    });
-
-    // update file in DB
-    file.path = newPath;
+    // set new data
     file.name = newFileName;
+    file.path = path.join(path.dirname(file.path), newFileName);
     
     try {
+        // update cloud
+        await supabase.updateFileNamePath(oldFilePath, file.path);
+
+        // update DB
         await db.updateFileData(req.user.id, file);
         console.log("File data updated.");
     } catch (error) {

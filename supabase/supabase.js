@@ -118,6 +118,27 @@ async function getFileUrl(filePath) {
     return data.publicUrl;
 }
 
+// update file name and path
+async function updateFileNamePath(oldPath, newPath) {
+    // copy file to new location
+    const { error: copyError } = await supabase.storage
+        .from("user-files")
+        .copy(oldPath, newPath);
+
+    if (copyError) throw new Error("Failed to copy new file(rename): ", copyError);
+
+    console.log(`File copied to: ${newPath}`);
+
+    // delete old file
+    const { error: deleteError } = await supabase.storage
+        .from("user-files")
+        .remove([oldPath]);
+
+    if (deleteError) throw new Error("Failed to delete old file: ", deleteError);
+
+    console.log(`File successfully renamed from ${oldPath} to ${newPath}`);
+}
+
 // delete file
 async function deleteFile(filePath) {
     const { data, error } = await supabase.storage
@@ -140,5 +161,6 @@ export default {
     deleteAllFolderFiles,
     uploadFile,
     getFileUrl,
+    updateFileNamePath,
     deleteFile,
 }
