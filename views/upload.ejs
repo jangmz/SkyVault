@@ -11,16 +11,19 @@
                         <label for="folder" class="form-label">Folder</label>
                         <select name="folder" id="folder" class="form-control">
                             <option value="null"></option>
-                            <% folders.map(folder => { %>
-                                <% if (folder.parentID === null) { %>
-                                    <option value="<%= folder.id %>"><%= folder.name %></option>
-                                    <% folders.map(folder2 => { %>
-                                        <% if (folder.id === folder2.parentID) { %>
-                                            <option value="<%= folder2.id %>">-<%= folder2.name %></option>
-                                        <% } %>
-                                    <%})%>
-                                <% } %>
-                            <% }) %>
+                            <%
+                                function renderFolders(folders, parentID = null, level = 0) {
+                                    folders.filter(folder => folder.parentID === parentID).forEach(folder => {
+                            %>
+                                    <option value="<%= folder.id %>">
+                                        <%= '-'.repeat(level) %> <%= folder.name %>
+                                    </option>
+                                    <% renderFolders(folders, folder.id, level + 1); %>
+                            <%
+                                    });
+                                }
+                                renderFolders(folders);
+                            %>
                         </select>
                     </div>
                 <% } %>
