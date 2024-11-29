@@ -71,6 +71,28 @@ async function createFolder(folderData) {
     }
 }
 
+// get all files from the folder
+async function filesFromFolder(folderPath) {
+    const { data: files, error: filesError } = await supabase.storage
+        .from("user-files")
+        .list(folderPath, { limit: 300 });
+
+    if (filesError) throw new Error("Error reading files from the folder");
+
+    return files;
+}
+
+// delete all files in the folder
+async function deleteAllFolderFiles(filePaths) {
+    const { data: deleteData, error: deleteError } = await supabase.storage
+        .from("user-files")
+        .remove(filePaths);
+
+    if (deleteError) throw new Error ("Failed to delete files: ", deleteError);
+
+    console.log("Files deleted: ", deleteData);
+}
+
 // upload a file to the supabase storage
 async function uploadFile(fileData){
     const { data, error } = await supabase.storage
@@ -96,11 +118,27 @@ async function getFileUrl(filePath) {
     return data.publicUrl;
 }
 
+// delete file
+async function deleteFile(filePath) {
+    const { data, error } = await supabase.storage
+        .from("user-files")
+        .remove(filePath);
+    
+    if (error) {
+        throw new Error("File deletion failed.");
+    } else {
+        console.log("File deleted: ", data);
+    }
+}
+
 export default {
     //createBucket,
     sharedBucketCheck,
     createUserFolder,
     createFolder,
+    filesFromFolder,
+    deleteAllFolderFiles,
     uploadFile,
     getFileUrl,
+    deleteFile,
 }

@@ -1,4 +1,5 @@
 import db from "../prisma/queries.js";
+import supabase from "../supabase/supabase.js";
 import fs from "node:fs";
 import path from "path";
 
@@ -38,22 +39,16 @@ async function skyVaultFolderGet(req, res, next) {
 
 // GET /sky-vault/delete-file/:fileID 
 async function deleteFile(req, res, next){
-    // delete file in the filesystem
     const filePath = await db.getFilePath(parseInt(req.params.fileID));
     
-    fs.unlink(filePath, (error) => {
-        if (error) {
-            next(error);
-        }
-
-        console.log(`File: ${filePath} has been removed from the filesystem.`);
-    });
-
-    // delete file in DB
     try {
+        // remove file in the cloud
+        await supabase.deleteFile(filePath);
+
+        // remove file in DB
         await db.deleteFile(req.user.id, parseInt(req.params.fileID));
     } catch (error) {
-        next(error);
+        return next(error);
     }
 
     res.redirect("/sky-vault");
@@ -102,20 +97,26 @@ async function editFilePost(req, res, next) {
 async function deleteFolder(req, res, next) {
     // delete folder in filesystem (with all it's files)
     const folder = await db.getFolderData(req.user.id, parseInt(req.params.folderID));
-    //const folderFiles = folder.File;
+    
+    // ensure folder path ends with "/"
+    if (!folder.path.endsWith("/")) {
+        folder.path += "/";
+    }
 
-    fs.rm(folder.path, { recursive: true }, (error) => {
-        if (error) {
-            next(error);
-        }
-
-        console.log(`Folder "${folder.name}", all its subfolders & files have been deleted.`);
-    });
+    // get all files in the folder (to be deleted) from the cloud
+    const files = await supabase.filesFromFolder(folder.path);
+    
+    // creates an array of file paths to delete
+    const filePaths = files.map(file => `${folder.path}${file.name}`);
 
     try {
+        // delete files in cloud
+        await supabase.deleteAllFolderFiles(filePaths);
+
+        // delete files in DB
         await db.deleteFolderAndFiles(req.user.id, parseInt(req.params.folderID));
     } catch (error) {
-        next(error);
+        return next(error);
     }
 
     res.redirect("/sky-vault");
