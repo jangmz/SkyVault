@@ -1,0 +1,15 @@
+// Import Bootstrap functions
+@use "../../node_modules/bootstrap/scss/functions" as *;
+
+// Override default Bootstrap theme colors
+$primary: #ffc400; // Replace with your desired primary color
+$secondary: #6c757d; // Replace with your desired secondary color
+
+// Add more customizations here if needed
+$success: #28a745;
+$info: #17a2b8;
+$warning: #ffc107;
+$danger: #dc3545;
+
+// Import Bootstrap
+@use "../../node_modules/bootstrap/scss/bootstrap" as *;
