@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../public/css/custom.css">
+    <link rel="stylesheet" href="/css/styles.css">
     <title><%= title %></title>
 </head>
 <body>
@@ -19,7 +19,7 @@
                 <%- include("partials/sidemenu.ejs") %>
             <% } %>
 
-            <main class="col-md-9 col-lg-10 p-4">
+            <main class="col-sm-11 col-md-9 col-lg-10 p-4">
                 <h1 class="text-center"><%= title %></h1>
                 <%- body %>
             </main>
@@ -27,5 +27,6 @@
     </div>
     <!-- Bootstrap JavaScript and dependencies (jQuery and Popper.js) -->
     <script src="/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

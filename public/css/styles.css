@@ -1,0 +1,17 @@
+@media (max-width: 768px) {
+    /*#sidebar.sidebar {
+        margin-left:0;
+        width: 60px;
+    }*/
+
+    .app-title {
+        writing-mode: vertical-rl; /* Rotate the text vertically */
+        transform: rotate(180deg); /* Optional: Adjust the text orientation */
+        text-align: center; /* Ensure the text is centered */
+        white-space: nowrap; /* Prevent the text from breaking into multiple lines */
+    }
+
+    #sidebar.sidebar .nav-link span {
+        display: none;  /* Hide the text on smaller screens */
+    }
+}
