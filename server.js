@@ -56,6 +56,9 @@ app.use(
                 checkPeriod: 2 * 60 * 1000, // in ms, expired sessions are automatically removed
                 dbRecordIdIsSessionId: true, // session ID = prisma record ID
                 dbRecordIdFunction: undefined, // function to generate prisma record ID for a given session ID
+                onError: (error) => {
+                    console.error("Session store error: ", error.message);
+                }
             }
         )
     })
