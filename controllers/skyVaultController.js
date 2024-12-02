@@ -80,11 +80,15 @@ async function editFilePost(req, res, next) {
         // update cloud
         await supabase.updateFileNamePath(oldFilePath, file.path);
 
+        // update download link
+        const downloadUrl = await supabase.getFileUrl(file.path);
+        file.url = `${downloadUrl}?download`;
+
         // update DB
         await db.updateFileData(req.user.id, file);
         console.log("File data updated.");
     } catch (error) {
-        next(error);
+        return next(error);
     }
     
     res.redirect(`/sky-vault`);

@@ -120,12 +120,13 @@ async function getFileUrl(filePath) {
 
 // update file name and path
 async function updateFileNamePath(oldPath, newPath) {
+    console.log(`${oldPath} --> ${newPath}`);
     // copy file to new location
     const { error: copyError } = await supabase.storage
         .from("user-files")
         .copy(oldPath, newPath);
 
-    if (copyError) throw new Error("Failed to copy new file(rename): ", copyError);
+    if (copyError) throw new Error(`Failed to copy new file(rename): ${oldPath} -> ${newPath} \nError: ${copyError.message}`);
 
     console.log(`File copied to: ${newPath}`);
 
@@ -134,7 +135,7 @@ async function updateFileNamePath(oldPath, newPath) {
         .from("user-files")
         .remove([oldPath]);
 
-    if (deleteError) throw new Error("Failed to delete old file: ", deleteError);
+    if (deleteError) throw new Error(`Failed to delete old file (${oldPath}): ${deleteError.message}`);
 
     console.log(`File successfully renamed from ${oldPath} to ${newPath}`);
 }

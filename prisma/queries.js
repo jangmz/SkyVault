@@ -154,7 +154,8 @@ async function updateFileData(userID, file) {
             },
             data: {
                 name: file.name,
-                path: file.path
+                path: file.path,
+                url: file.url
             }
         })
 
