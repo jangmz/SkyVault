@@ -9,7 +9,7 @@
     "start": "node server.js",
     "dev": "node --watch server.js",
     "prisma:deploy": "prisma migrate deploy",
-    "deploy-start": "npm run prisma:deply && npm run start" 
+    "deploy-start": "npm run prisma:deploy && npm run start" 
   },
   "prisma": {
     "schema": "./prisma/schema.prisma"
