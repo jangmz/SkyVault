@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
     "dev": "node --watch server.js",
-    "build-css": "sass public/styles/custom.scss public/css/custom.css --watch"
+    "prisma:deploy": "prisma migrate deploy"
   },
   "keywords": [],
   "author": "",
