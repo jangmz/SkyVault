@@ -1,7 +1,7 @@
 # SkyVault
 Cloud storage solution made with Express &amp; Prisma
 
-Application preview: [SkyVault Cloud Storage](https://skyvault-production.up.railway.app/)
+Application preview: [SkyVault Cloud Storage](https://skyvault-ppfk.onrender.com/log-in)
 
 ## Description
 This web application made with Express is a cloud storage solution. When user signs up for an account, they can log in and upload different types of files to the cloud. They can also create folders and sub folders to where they can upload their files. Files can be downloaded, renamed and deleted. I used NodeJS with PostgreSQL, Prisma and Supabase. For general design I used basic bootstrap.
